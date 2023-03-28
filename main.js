@@ -1,60 +1,89 @@
-const usuario = {
-    nombre: prompt("Ingresa tu nombre"),
-    Nacionalidad: prompt("Ingresa tu nacionalidad"),
-    saludar
-}
-function saludar(){
-   alert ("Hola" + " " + this.nombre);
-}
-usuario.saludar();
+const contenedorProductos = document.querySelector(`#contenedor-productos`)
+const contenedorCarrito = document.querySelector(`#carrito-contenedor`)
+const contadorCarrito = document.querySelector(`#contadorCarrito`)
+const contadorPrecioTotal = document.querySelector(`#precioTotal`)
+
+const carrito = []
 
 
-let email = prompt("Ingresa tu email");
-let password = prompt("Ingresa una contraseña");
+stockProductos.forEach((producto) => {
 
-function usuarioNuevo(email,contraseña){
-    this.email = email,
-    this.password = password
-}
+    const div = document.createElement('div')
+    div.className = 'producto'
 
-let usuario1 = new usuarioNuevo(email, password)
-console.log(usuario1);
+    div.innerHTML = `
+            <img src=${producto.img} alt="">
+            <h3>${producto.nombre}</h3>
+            <p>${producto.desc}</p>
+            <p>Talle: ${producto.talle}</p>
+            <p class="precioProducto">Precio: $${producto.precio}</p>
+    `
 
-const productos = [
-  { nombre: "Tops", precio: 4500 },
-  { nombre: "Bombachas", precio: 3500 },
-  { nombre: "Pilusos", precio: 3000 }
-];
+    const button = document.createElement('button')
+    button.className = "boton-agregar"
+    button.innerHTML = `Agregar <i class="fas fa-shopping-cart"></i>`
 
-let seleccionProducto = prompt("Que estabas buscando? bombachas, tops o pilusos?");
-alert( productos.filter((producto) => producto.nombre === seleccionProducto));
+    button.addEventListener('click', () => {
+        agregarAlCarrito(producto.id)
+    })
 
+    div.append(button)
 
-function calcular(){
-    var valorFinal
-    let total = parseInt(prompt("Ingresa el total de tu compra"));
-    let descuento = parseInt(prompt("Ingresa el valor de tu descuento"));
+    contenedorProductos.append(div)
+})
 
-    valorFinal = total - descuento;
-    alert( nombre + "Tu precio con descuento es de :" + valorFinal);
+// agregar un producto al carrito
 
-}
+const agregarAlCarrito = (id) => {
+    const producto = stockProductos.find( (item) => item.id === id )
+    carrito.push(producto)
 
-if(nombre === ""){
-
-}
-else{
-    saludar();
-    calcular();
+    console.log(carrito)
+    renderCarrito()
 }
 
-while (true){
-    let edad = +prompt("Ingresa tu edad");
+
+
+
+const renderCarrito = () => {
+    renderListadoCarrito()
+    renderCantidadCarrito()
+    renderTotalCarrito()
+}
+
+const renderListadoCarrito = () => {
+    contenedorCarrito.innerHTML = ''
+
+    carrito.forEach((producto) => {
+        const div = document.createElement('div')
+        div.className = "productoEnCarrito"
+        div.innerHTML = `
+            <p>${producto.nombre}</p>
+            <p>Precio: $${producto.precio}</p>
+            <button class="boton-eliminar"><i class="fas fa-trash-alt"></i></button>
+        `
     
-    if(edad>18){
-    alert("Sos mayor de edad, avanzaremos con los medios de pago")
-     break
-    } else if (num<18){
-     break
-    }
+        contenedorCarrito.append(div)
+    })
 }
+
+const renderCantidadCarrito = () => {
+    contadorCarrito.innerText = carrito.length
+}
+
+const renderTotalCarrito = () => {
+    let total = 0
+
+    carrito.forEach((producto) => {
+        total += producto.precio
+    })
+
+    contadorPrecioTotal.innerText = total
+}
+
+
+let usuarioIngresado = prompt("Ingresa tu email para recibir mas info");
+localStorage.setItem("usuario-ingresado", usuarioIngresado);
+
+let usuarioIngresadoEnLocalStorage = localStorage.getItem("usuario-ingresado");
+console.log(usuarioIngresadoEnLocalStorage);
